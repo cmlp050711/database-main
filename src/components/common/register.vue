@@ -13,18 +13,20 @@
         <div class="bottom">
           <div class="container">
             <p class="title" style="font-size:25px; font-weight: bold">用户注册</p>
-      <el-form  label-width="80px"  @keyup.enter.native="login()">
+      <el-form  label-width="80px">
         <el-form-item label="用户名">
-          <el-input v-model.trim="name" placeholder="请输入用户名"></el-input>
+          <el-input v-model.trim="login.name" placeholder="请输入用户名" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model.trim="password" placeholder="请输入密码" type='password'></el-input>
+          <el-input v-model.trim="login.password" placeholder="请输入密码" type='password' style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="手机号">
-          <el-input v-model.trim="tel" placeholder="请输入手机号" type='tel'></el-input>
+        <el-form-item label="角色">
+          <el-checkbox-group v-model="login.role" style="display: flex;justify-content: start;flex-wrap: wrap;width: 80%">
+            <el-checkbox v-for="user in options" :label="user.value" :key="user.value">{{user.label}}</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
         <div class="submit">
-          <el-button type="primary" class="row-login" @click="register()">注册</el-button>
+          <el-button type="primary" class="row-login" @click="register" style="width: 60%"> 注册</el-button>
         </div>
       </el-form>
 
@@ -48,32 +50,71 @@ export default {
   },
   data(){
     return{
-      name:"",
-      password:"",
-      mail:"",
-      tel:""
+      login:{
+        name:"",
+        password:"",
+        role:[]
+      },
+      options: [ {
+        value: 'member',
+        label: '会员'
+      },
+        {
+        value: 'sys_admin',
+        label: '系统管理员'
+      }, {
+        value: 'course_admin',
+        label: '课程管理员'
+      }, {
+        value: 'leader',
+        label: '公司领导'
+      }],
     };
   },methods:{
-    register:function()
-    {
-      if(localStorage['name']===this.name)
-      {
-        alert("用户名已存在");//如果用户名已存在则无法注册
+    register(){
+      console.log(this.login)
+      if (this.login.role.length===0){
+        this.$message({
+          showClose: true,
+          type: 'error',
+          message: "角色不可为空"
+        })
+      }else {
+        this.$axios({
+          url: `http://localhost:8080/user/enroll`,
+          method: 'post',
+          data: {
+            ...this.login
+          }
+        }).then(res=> {
+          console.log(res.data)
+          let resData=res.data
+          if (resData.res.code===200){
+
+            this.$message({
+              showClose: true,
+              type: 'success',
+              message: resData.res.msg
+            })
+            //   清空信息
+            this.login={}
+            //   跳转到登录
+            this.$router.push({path: '/'})
+          }else {
+            this.$message({
+              showClose: true,
+              type: 'error',
+              message: resData.res.msg
+            })
+            //   清空信息
+            this.login={}
+          }
+        })
       }
-      else if(this.name==='')
-      {
-        alert("用户名不能为空");
-      }
-      else{//将新用户信息存储到localStorage
-        localStorage.setItem('name',this.name);
-        localStorage.setItem('password',this.password);
-        localStorage.setItem('mail',this.mail);
-        localStorage.setItem('tel',this.tel);
-        localStorage.setItem('s',"false");
-        alert("注册成功");
-        this.$router.replace('/');//完成注册后跳转至登录页面
-      }
+
+
     }
+
   }
 };
 </script>
