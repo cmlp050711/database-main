@@ -115,6 +115,7 @@ export default {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  margin-right: 50px;
 }
 .selectBox div:first-child {
   font-weight: bold;

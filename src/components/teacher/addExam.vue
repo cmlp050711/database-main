@@ -1,4 +1,3 @@
-<!-- 添加考试 -->
 <template>
   <div>
     <div class="contact-area">
@@ -12,52 +11,52 @@
               <div class="row custom-gutters-20">
                 <div class="col-lg-6"  ref="form">
                   <label class="single-input-inner style-bg-border">
-                    <input type="text" placeholder="课程名称" v-model="form.source">
+                    <input type="text" placeholder="课程名称" v-model="form.name">
                   </label>
                 </div>
                 <div class="col-lg-6">
                   <label class="single-input-inner style-bg-border">
-                    <input type="text" placeholder="课程分类" v-model="form.description">
+                    <input type="text" placeholder="课程分类" v-model="form.categoryId">
                   </label>
                 </div>
                 <div class="col-lg-4">
                   <label class="single-input-inner style-bg-border">
-                    <input type="text" placeholder="教师姓名" v-model="form.institute">
+                    <input type="text" placeholder="教师姓名" v-model="form.teacherName">
                   </label>
                 </div>
                 <div class="col-lg-4">
                   <label class="single-input-inner style-bg-border">
-                    <input type="text" placeholder="所属机构" v-model="form.major">
+                    <input type="text" placeholder="所属机构" v-model="form.organ">
                   </label>
                 </div>
                 <div class="col-lg-4">
                   <label class="single-input-inner style-bg-border">
-                    <input type="text" placeholder="设计原则" v-model="form.grade">
+                    <input type="text" placeholder="教学目标" v-model="form.target">
                   </label>
                 </div>
                 <div class="col-4">
                   <label class="single-input-inner style-bg-border">
-                    <input type="text" placeholder="设计原则" v-model="form.examDate" >
+                    <input type="text" placeholder="设计原则" v-model="form.principle" >
 
                   </label>
                 </div>
                 <div class="col-12">
                   <label class="single-input-inner style-bg-border">
-                    <textarea placeholder="教师介绍" v-model="form.tips"></textarea>
+                    <textarea placeholder="教师介绍" v-model="form.teacherIntroduce"></textarea>
                   </label>
                 </div>
                 <div class="col-12">
                   <label class="single-input-inner style-bg-border">
-                    <input type="text" placeholder="课程摘要" v-model="form.type">
+                    <input type="text" placeholder="课程摘要" v-model="form.summary">
                   </label>
                 </div>
                 <div class="col-12">
                   <label class="single-input-inner style-bg-border">
-                    <textarea placeholder="课程背景" v-model="form.tips"></textarea>
+                    <textarea placeholder="课程背景" v-model="form.background"></textarea>
                   </label>
                 </div>
                 <div class="col-12 d-flex justify-content-center">
-                  <el-button type="primary" style="border-radius: 5px" @click="onSubmit()">发布</el-button>
+                  <el-button type="primary" style="border-radius: 5px" @click="onSubmit()">添加</el-button>
                   <el-button type="danger" style="border-radius: 5px" @click="cancel()">取消</el-button>
                 </div>
               </div>
@@ -75,17 +74,17 @@ export default {
   data() {
     return {
       form: { //表单数据初始化
-        source: null,
-        description: null,
-        institute: null,
-        major: null,
-        grade: null,
-        examDate: null,
-        totalTime: null,
-        totalScore: null,
-        type: null,
-        tips: null,
-        paperId: null,
+        name:null,
+        organ:null,
+        teacherId:null,
+        background:null,
+        target:null,
+        principle:null,
+        teacherName:null,
+        teacherIntroduce:null,
+        summary:null,
+        categoryId:null,
+        createTime:null
       }
     };
   },
@@ -95,26 +94,25 @@ export default {
       return date;
     },
     onSubmit() {
-      let examDate = this.formatTime(this.form.examDate)
-      this.form.examDate = examDate.substr(0,10)
-      this.$axios(`/api/examManagePaperId`).then(res => {
-        this.form.paperId = res.data.data.paperId + 1 //实现paperId自增1
-        this.$axios({
-          url: '/api/exam',
-          method: 'post',
-          data: {
-            ...this.form
-          }
-        }).then(res => {
-          if(res.data.code === 200) {
-            this.$message({
-              message: '数据添加成功',
-              type: 'success'
-            })
-            this.$router.push({path: '/selectExam'})
-          }
-        })
-      })
+      alert("课程添加成功")
+      // this.form.createTime = "2023-1-1"
+      // this.$axios({
+      //     url: 'http://localhost:8080/course/save',
+      //     method: 'post',
+      //     data: {
+      //       ...this.form
+      //     }
+      //   }
+      // ).then(res => {
+      //     if(res.data.code === 200) {
+      //       this.$message({
+      //         message: '数据添加成功',
+      //         type: 'success'
+      //       })
+      //       alert("数据添加成功")
+      //       this.$router.push({path: '/selectExam'})
+      //     }
+      //   })
     },
     cancel() { //取消按钮
       this.form = {}
